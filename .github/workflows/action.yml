@@ -47,6 +47,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: Test Basic Success
           conclusion: success
+          actions: |
+            [{"label": "Fix this","description": "Let us fix that for you","identifier": "fix_errors"}]
 
       - uses: LouisBrunner/checks-action@v2.0.0
         if: always()
