@@ -47,6 +47,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: Test Basic Success
           conclusion: success
+          action_url: https://example.com/action
           actions: |
             [{"label": "Fix this","description": "Let us fix that for you","identifier": "fix_errors"}]
 
