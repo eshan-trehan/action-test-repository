@@ -29,19 +29,19 @@ jobs:
       - name: Run a one-line script
         run: echo Hello, world!
 
-      # Create a seperate check with the information
-      - name: Create check run
-        id: create_check
-        uses: octokit/request-action@v2.x
-        with:
-          route: POST /repos/eshan-trehan/action-test-repository/check-runs
-          mediaType: '{"previews": ["antiope"]}'
-          output: '{"title":"Check run from actions","summary":"Summary of the check run","text":"details"}'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+
+      # Runs a seperate check 
+      - uses: LouisBrunner/checks-action@v2.0.0
+        if: always()
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: Test XYZ
+          conclusion: ${{ job.status }}
+          output: |
+            {"summary":"This is the summary I randomly added"}
+
