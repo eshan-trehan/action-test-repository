@@ -36,11 +36,6 @@ jobs:
         with:
           route: POST /repos/eshan-trehan/action-test-repository/check-runs
           mediaType: '{"previews": ["antiope"]}'
-          owner: ${{ github.repository_owner }}
-          repo: ${{ github.event.repository.name }}
-          name: My check run
-          head_sha: ${{ github.event.pull_request.head.sha }}
-          status: in_progress
           output: '{"title":"Check run from actions","summary":"Summary of the check run","text":"details"}'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
