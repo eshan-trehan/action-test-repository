@@ -21,7 +21,6 @@ jobs:
         # Run your test command here
 
   deploy:
-    if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
 
