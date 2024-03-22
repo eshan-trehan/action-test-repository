@@ -27,27 +27,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
-    - name: Run deployment script
-      run: |
-        echo "Running deployment script..."
-        # Run your deployment command here
-    
-    - name: Custom GitHub Check
-      id: check
-      uses: actions/github-script@v4
+    - uses: LouisBrunner/checks-action@v2.0.0
+      if: always()
       with:
-        script: |  
-          // JavaScript code
-          const sha = context.payload.after || context.sha;
-          const check = await github.rest.checks.create({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            name: 'My Custom Check',
-            head_sha: sha,
-            status: 'completed',
-            conclusion: 'success',
-            output: {
-              title: 'My Custom Check',
-              summary: 'This is an example of creating a custom check for an individual step',
-            },
-          });
+        token: ${{ secrets.GITHUB_TOKEN }}
+        name: Test XYZ
+        conclusion: ${{ job.status }}
+        output: |
+          {"summary":"${{ steps.test.outputs.summary }}"}
+    
