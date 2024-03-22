@@ -31,3 +31,25 @@ jobs:
       run: |
         echo "Running deployment script..."
         # Run your deployment command here
+    
+    - name: Check step 2
+      id: step2
+      uses: actions/github-script@v3
+      with:
+        script: |
+          // This is a JavaScript code
+          const time = new Date().toISOString()
+          await github.checks.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            name: 'My Custom Check',
+            head_sha: github.context.sha,
+            status: 'completed',
+            conclusion: 'success', // can be 'success', 'failure', 'neutral', etc.
+            started_at: time,
+            completed_at: time,
+            output: {
+              title: 'My Custom Check',
+              summary: 'This is an example of creating a custom check for an individual step'
+            }
+          })
