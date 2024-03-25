@@ -53,9 +53,8 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
           name: Summary Generation
           conclusion: success
-          action_url: https://example.com/action
-          actions: |
-            [{"label": "Fix this","description": "Let us fix that for you","identifier": "fix_errors"}]
+          output: |
+            {"summary":"Test was a success","text_description":"This is a text description of the annotations and images\nWith more stuff\nAnd more"}
 
       - uses: LouisBrunner/checks-action@v2.0.0
         if: always()
