@@ -50,7 +50,7 @@ jobs:
       - uses: LouisBrunner/checks-action@v2.0.0
         if: always()
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
           name: Test Basic Success
           conclusion: success
           action_url: https://example.com/action
@@ -60,7 +60,7 @@ jobs:
       - uses: LouisBrunner/checks-action@v2.0.0
         if: always()
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
           name: Test Basic Success (Implicit)
           conclusion: success
           output: |
@@ -69,7 +69,7 @@ jobs:
       - uses: LouisBrunner/checks-action@v2.0.0
         if: always()
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
           name: Test Basic Action Required
           conclusion: action_required
           action_url: https://example.com/action
@@ -78,7 +78,7 @@ jobs:
       - uses: LouisBrunner/checks-action@v2.0.0
         if: always()
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
           name: Test With Annotations
           conclusion: success
           # output.summary is required with actions!
@@ -90,7 +90,7 @@ jobs:
       - uses: LouisBrunner/checks-action@v2.0.0
         if: always()
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
           name: Test With Images
           conclusion: success
           # output.summary is required with actions!
