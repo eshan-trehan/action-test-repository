@@ -21,11 +21,12 @@ jobs:
   executeDismissCommand:
     if: github.event_name == 'repository_dispatch' && github.event.action == 'dismiss-command'
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
       - name: Add reaction
         uses: peter-evans/create-or-update-comment@v4
         with:
-          token: ${{ secrets.PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           reactions: hooray
