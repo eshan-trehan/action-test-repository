@@ -10,7 +10,9 @@ jobs:
       - name: Slash Command Dispatch
         uses: peter-evans/slash-command-dispatch@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          dispatch-type: workflow
+          token: ${{ secrets.PAT }}
           commands: |
-            dismiss
+            hello-world-local
+            ping-local
+          permission: none
+          issue-type: pull-request
