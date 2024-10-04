@@ -17,4 +17,3 @@ jobs:
           issue_type: pull-request
           commands: |
             dismiss
-
