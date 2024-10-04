@@ -3,7 +3,7 @@ on:
   issue_comment:
     types: [created]
   repository_dispatch:
-    types: [integration-test-command]
+    types: [dismiss-command]
 jobs:
   slashCommandDispatch:
     if: github.event_name == 'issue_comment'
