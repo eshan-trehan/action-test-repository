@@ -11,6 +11,4 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
           commands: |
-            deploy
-            integration-test
-            build-docs
+            dismiss
