@@ -6,13 +6,15 @@ on:
       - created
 jobs:
   dispatch:
-    if: |
-      github.event_name == 'issue_comment'
+    if: github.event_name == 'issue_comment'
     runs-on: ubuntu-latest
-    permissions:
-      checks: write
-      contents: read
     steps:
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: Slash Command Dispatch
+        uses: peter-evans/slash-command-dispatch@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          dispatch_type: workflow
+          issue_type: pull-request
+          commands: |
+            dismiss
 
