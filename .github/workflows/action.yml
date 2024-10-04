@@ -6,7 +6,7 @@ on:
     types: [dismiss-command]
 jobs:
   slashCommandDispatch:
-    if: github.event_name == 'issue_comment' && github.event.issue.pull_request && github.event.issue.name == 'created'
+    if: github.event_name == 'issue_comment' && github.event.issue.pull_request
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
