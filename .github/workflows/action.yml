@@ -24,7 +24,10 @@ jobs:
     permissions: write-all
     steps:
       - name: Export Pull Request Identifier
-        run: echo "PULL_REQUEST_IDENTIFIER=${{github.event.client_payload.github.payload.repository.full_name}}/${{github.event.client_payload.github.payload.issue.number}}" >> $GITHUB_ENV
+        run: |
+          REPO_FULL_NAME=${{ github.event.client_payload.github.payload.repository.full_name }}
+          ISSUE_NUMBER=${{ github.event.client_payload.github.payload.issue.number }}
+          echo "PULL_REQUEST_IDENTIFIER=${REPO_FULL_NAME}/${ISSUE_NUMBER}" >> $GITHUB_ENV
       - name: Print Pull Request Identifier
         run: echo "$PULL_REQUEST_IDENTIFIER"
       - name: Add reaction
