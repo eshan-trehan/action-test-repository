@@ -11,7 +11,12 @@ jobs:
         uses: peter-evans/slash-command-dispatch@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          dispatch-type: workflow
-          commands: |
-            dismiss
+          config: >
+            [
+              {
+                "command": "dismiss",
+                "issue_type": "pull-request",
+                "dispatch_type": "workflow"
+              }
+            ]
   
