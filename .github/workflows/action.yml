@@ -23,23 +23,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
-      - name: Get Pull Request Information
-        id: get-pr-info
-        uses: actions/github-script@v3
-        with:
-          script: |
-            const request = {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: ${{github.event.client_payload.github.payload.issue.number}}
-            }
-            try {
-              const result = await github.pulls.get(request)
-              core.info("Received Pull Request Information")
-              return result.data
-            } catch (err) {
-              core.setFailed(`Request failed with error ${err}`)
-            }
+      - name: Export Pull Request Identifier
+        run: echo "PULL_REQUEST_IDENTIFIER=${{github.event.client_payload.github.payload.repository.full_name}}/${{github.event.client_payload.github.payload.issue.number}}" >> $GITHUB_ENV
+      - name: Print Pull Request Identifier
+        run: echo "$PULL_REQUEST_IDENTIFIER"
       - name: Add reaction
         uses: peter-evans/create-or-update-comment@v4
         with:
