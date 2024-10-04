@@ -23,8 +23,23 @@ jobs:
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
-      - name: Echo Github Trigger Info
-        run: echo "${{ toJson(github.event.client_payload.github.payload) }}"
+      - name: Get Pull Request Information
+        id: get-pr-info
+        uses: actions/github-script@v3
+        with:
+          script: |
+            const request = {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: github.event.client_payload.github.payload.issue.number
+            }
+            try {
+              const result = await github.pulls.get(request)
+              core.info("Received Pull Request Information")
+              return result.data
+            } catch (err) {
+              core.setFailed(`Request failed with error ${err}`)
+            }
       - name: Add reaction
         uses: peter-evans/create-or-update-comment@v4
         with:
