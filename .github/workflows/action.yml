@@ -23,7 +23,9 @@ jobs:
   executeDismissCommand:
     if: github.event_name == 'repository_dispatch' && github.event.action == 'dismiss-command'
     runs-on: ubuntu-latest
-    permissions: write-all
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - name: Export Pull Request Identifier
         run: |
