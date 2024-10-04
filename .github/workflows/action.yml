@@ -12,7 +12,6 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commands: |
-            hello-world-local
-            ping-local
+            dismiss
           permission: none
           issue-type: pull-request
