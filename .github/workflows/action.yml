@@ -4,9 +4,10 @@ on:
   issue_comment:
     type:
       - created
-
 jobs:
-  build:
+  dispatch:
+    if: |
+      github.event_name == 'issue_comment'
     runs-on: ubuntu-latest
     permissions:
       checks: write
