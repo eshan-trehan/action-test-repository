@@ -24,7 +24,7 @@ jobs:
     permissions: write-all
     steps:
       - name: Echo Github Trigger Info
-        run: echo ${{ github.event.client_payload.github.payload }}
+        run: echo ${{ toJson(github.event.client_payload.github.payload) }}
       - name: Add reaction
         uses: peter-evans/create-or-update-comment@v4
         with:
