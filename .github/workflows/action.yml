@@ -13,8 +13,8 @@ jobs:
         uses: peter-evans/slash-command-dispatch@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          dispatch_type: workflow
-          issue_type: pull-request
+          dispatch-type: workflow
+          issue-type: pull-request
           commands: |
             dismiss
 
