@@ -4,6 +4,15 @@ on:
   issue_comment:
     type:
       - created
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: 'The repository from which the slash command was dispatched'
+        required: true
+      comment-id:
+        description: 'The comment-id of the slash command'
+        required: true
+  
 jobs:
   dispatch:
     if: github.event_name == 'issue_comment'
@@ -18,4 +27,21 @@ jobs:
           issue-type: pull-request
           commands: |
             dismiss
+          static-args: |
+            repository=${{ github.repository }}
+            comment-id=${{ github.event.comment.id }}
+  handle_dispatch:
+    if: github.event_name == 'workflow_dispatch'
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add reaction
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.PAT }}
+          repository: ${{ github.event.inputs.repository }}
+          comment-id: ${{ github.event.inputs.comment-id }}
+          reactions: hooray
+
+  
 
