@@ -2,8 +2,11 @@ name: Slash Command Dispatch
 on:
   issue_comment:
     types: [created]
+  repository_dispatch:
+    types: [integration-test-command]
 jobs:
   slashCommandDispatch:
+    if: github.event_name == 'issue_comment'
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
@@ -15,4 +18,14 @@ jobs:
             dismiss
           permission: none
           issue-type: pull-request
-          dispatch-type: workflow
+  executeDismissCommand:
+    if: github.event_name == 'repository_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add reaction
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.PAT }}
+          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
+          comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
+          reactions: hooray
