@@ -15,3 +15,4 @@ jobs:
             dismiss
           permission: none
           issue-type: pull-request
+          dispatch-type: workflow
