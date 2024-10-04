@@ -31,7 +31,7 @@ jobs:
             const request = {
               owner: context.repo.owner,
               repo: context.repo.repo,
-              pull_number: github.event.client_payload.github.payload.issue.number
+              pull_number: ${{github.event.client_payload.github.payload.issue.number}}
             }
             try {
               const result = await github.pulls.get(request)
