@@ -39,7 +39,7 @@ jobs:
       - name: Print Pull Request Identifier
         run: echo "$PULL_REQUEST_IDENTIFIER"
       - name: Echo Slash Command Arguments
-        run: echo "${{ github.event.client_payload.slash_command.args }}"
+        run: echo "${{ toJson(github.event.client_payload.slash_command.args) }}"
       - name: Add reaction
         uses: peter-evans/create-or-update-comment@v4
         with:
