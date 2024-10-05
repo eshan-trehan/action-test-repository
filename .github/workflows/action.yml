@@ -47,7 +47,7 @@ jobs:
       - name: Validate Command Inputs
         run: |
           ERROR=false
-          if [[ -ne "$DISMISSED_REVIEWER" ]]
+          if [[ -z "$DISMISSED_REVIEWER" ]]
             ERROR_MESSAGE="No reviewer specified to dismiss!"
             ERROR=true
           fi
