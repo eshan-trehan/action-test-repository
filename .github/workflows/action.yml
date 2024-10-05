@@ -36,9 +36,9 @@ jobs:
           REPO_FULL_NAME=${{ github.event.client_payload.github.payload.repository.full_name }}
           ISSUE_NUMBER=${{ github.event.client_payload.github.payload.issue.number }}
           if [[ -n "${{ github.event.client_payload.slash_command.args.named.reviewer }}" ]]; then
-            DISMISSED_REVIEWER=${{ github.event.inputs.reviewer }}
+            DISMISSED_REVIEWER=${{ github.event.client_payload.slash_command.args.named.reviewer }}
           elif [[ -n "${{ github.event.client_payload.slash_command.args.unnamed.args.unnamed.arg1 }}" ]]; then
-            DISMISSED_REVIEWER=${{github.event.inputs.reviewer }}
+            DISMISSED_REVIEWER=${{ github.event.client_payload.slash_command.args.unnamed.args.unnamed.arg1 }}
           fi
           echo "PULL_REQUEST_IDENTIFIER=${REPO_FULL_NAME}/${ISSUE_NUMBER}" >> $GITHUB_ENV
           echo "DISMISSED_REVIEWER=${DISMISSED_REVIEWER}" >> $GITHUB_ENV
