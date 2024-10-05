@@ -55,7 +55,7 @@ jobs:
           echo "ERROR_MESSAGE=${ERROR_MESSAGE}" >> $GITHUB_ENV
       - name: Report Error Message
         uses: peter-evans/create-or-update-comment@v4
-        if: env.ERROR != True
+        if: env.ERROR != 'true'
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
