@@ -52,7 +52,7 @@ jobs:
           echo "ERROR=${ERROR}" >> $GITHUB_ENV
       - name: Report Error Message
         uses: peter-evans/create-or-update-comment@v4
-        if: env.ERROR == ''
+        if: env.ERROR != ''
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
@@ -62,7 +62,7 @@ jobs:
           reactions: eyes
       - name: Add success reaction
         uses: peter-evans/create-or-update-comment@v4
-        if: env.ERROR != ''
+        if: env.ERROR == ''
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
@@ -70,7 +70,7 @@ jobs:
           reactions: hooray
       - name: Add failure reaction
         uses: peter-evans/create-or-update-comment@v4
-        if: env.ERROR == ''
+        if: env.ERROR != ''
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
