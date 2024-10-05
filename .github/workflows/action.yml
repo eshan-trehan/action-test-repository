@@ -5,7 +5,7 @@ on:
   repository_dispatch:
     types: [dismiss-command]
 jobs:
-  slash_command_dispatch:
+  slash-command-dispatch:
     if: github.event_name == 'issue_comment' && github.event.issue.pull_request && github.event.action == 'created'
     runs-on: ubuntu-latest
     permissions:
@@ -24,14 +24,14 @@ jobs:
                 "issue-type": "pull-request"
               }
             ]
-  execute_dismiss_command:
+  execute-dismiss-command:
     if: github.event_name == 'repository_dispatch' && github.event.action == 'dismiss-command'
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
     steps:
-      - name: Export Pull Request Identifier
+      - name: Export Command Variables
         run: |
           REPO_FULL_NAME=${{ github.event.client_payload.github.payload.repository.full_name }}
           ISSUE_NUMBER=${{ github.event.client_payload.github.payload.issue.number }}
@@ -44,10 +44,25 @@ jobs:
           fi
           echo "PULL_REQUEST_IDENTIFIER=${REPO_FULL_NAME}/${ISSUE_NUMBER}" >> $GITHUB_ENV
           echo "DISMISSED_REVIEWER=${DISMISSED_REVIEWER}" >> $GITHUB_ENV
-      - name: Print Pull Request Identifier
+      - name: Validate Command Inputs
         run: |
-          echo "PULL_REQUEST_IDENTIFIER=$PULL_REQUEST_IDENTIFIER"
-          echo "DISMISSED_REVIEWER=$DISMISSED_REVIEWER"
+          ERROR=false
+          if [[ -ne "$DISMISSED_REVIEWER" ]]
+            ERROR_MESSAGE="No reviewer specified to dismiss!"
+            ERROR=true
+          fi
+          echo "ERROR=${ERROR}" >> $GITHUB_ENV
+          echo "ERROR_MESSAGE=${ERROR_MESSAGE}" >> $GITHUB_ENV
+      - name: Report Error Message
+        uses: peter-evans/create-or-update-comment@v4
+        if: env.ERROR != True
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
+          comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
+          body: |
+            :warning: ${{ ERROR_MESSAGE}}
+          reactions: eyes
       - name: Add reaction
         uses: peter-evans/create-or-update-comment@v4
         with:
