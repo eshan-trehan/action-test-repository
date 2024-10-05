@@ -50,7 +50,7 @@ jobs:
             ERROR="No reviewer specified to dismiss!"
           fi
           echo "ERROR=${ERROR}" >> $GITHUB_ENV
-      - name: Report Error Message
+      - name: Report Error
         uses: peter-evans/create-or-update-comment@v4
         if: env.ERROR != ''
         with:
@@ -58,9 +58,9 @@ jobs:
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |
-            :warning: Could not run the command
-          reactions: eyes
-      - name: Add success reaction
+            > :warning: Could not run the command
+          reactions: confused
+      - name: Report Success
         uses: peter-evans/create-or-update-comment@v4
         if: env.ERROR == ''
         with:
@@ -68,11 +68,3 @@ jobs:
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           reactions: hooray
-      - name: Add failure reaction
-        uses: peter-evans/create-or-update-comment@v4
-        if: env.ERROR != ''
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
-          comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
-          reactions: confused
