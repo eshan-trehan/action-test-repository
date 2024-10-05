@@ -46,16 +46,13 @@ jobs:
           echo "DISMISSED_REVIEWER=${DISMISSED_REVIEWER}" >> $GITHUB_ENV
       - name: Validate Command Inputs
         run: |
-          ERROR=false
           if [[ -z "$DISMISSED_REVIEWER" ]]; then
-            ERROR_MESSAGE="No reviewer specified to dismiss!"
-            ERROR=true
+            ERROR="No reviewer specified to dismiss!"
           fi
           echo "ERROR=${ERROR}" >> $GITHUB_ENV
-          echo "ERROR_MESSAGE=${ERROR_MESSAGE}" >> $GITHUB_ENV
       - name: Report Error Message
         uses: peter-evans/create-or-update-comment@v4
-        if: env.ERROR != 'true'
+        if: env.ERROR == ''
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
@@ -63,10 +60,19 @@ jobs:
           body: |
             :warning: Could not run the command
           reactions: eyes
-      - name: Add reaction
+      - name: Add success reaction
         uses: peter-evans/create-or-update-comment@v4
+        if: env.ERROR != ''
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           reactions: hooray
+      - name: Add failure reaction
+        uses: peter-evans/create-or-update-comment@v4
+        if: env.ERROR == ''
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
+          comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
+          reactions: confused
