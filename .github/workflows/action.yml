@@ -58,7 +58,7 @@ jobs:
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |
-            > :warning: Could not run the command
+            > :warning: ${{ env.ERROR }}
           reactions: confused
       - name: Report Success
         uses: peter-evans/create-or-update-comment@v4
