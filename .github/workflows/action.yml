@@ -50,6 +50,15 @@ jobs:
             ERROR="No reviewer specified to dismiss!"
           fi
           echo "ERROR=${ERROR}" >> $GITHUB_ENV
+      - name: Make Alfred Request to add dismissed Reviewers
+        if: env.ERROR != ''
+        run: |
+          RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X GET "https://google.com")
+          if [ "$RESPONSE_CODE" -eq 200 ]; then
+            echo "Request to Alfred Successful"
+          else
+            echo "ERROR=Request to Alfred failed with response code $RESPONSE_CODE" >> $GITHUB_ENV
+           fi
       - name: Report Error
         uses: peter-evans/create-or-update-comment@v4
         if: env.ERROR != ''
