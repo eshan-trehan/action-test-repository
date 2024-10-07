@@ -51,7 +51,7 @@ jobs:
           fi
           echo "ERROR=${ERROR}" >> $GITHUB_ENV
       - name: Make Alfred Request to add dismissed Reviewers
-        if: env.ERROR != ''
+        if: env.ERROR == ''
         run: |
           RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X GET "https://google.com")
           if [ "$RESPONSE_CODE" -eq 200 ]; then
