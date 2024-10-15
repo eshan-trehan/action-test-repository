@@ -63,7 +63,7 @@ jobs:
         if: env.ERROR != ''
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${GITHUB_REPOSITORY}
+          repository: env.GITHUB_REPOSITORY
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |
             > :warning: ${{ env.ERROR }}
@@ -73,6 +73,6 @@ jobs:
         if: env.ERROR == ''
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${GITHUB_REPOSITORY}
+          repository: env.GITHUB_REPOSITORY
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           reactions: hooray
