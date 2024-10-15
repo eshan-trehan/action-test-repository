@@ -41,7 +41,7 @@ jobs:
           elif [[ -n "${{ github.event.client_payload.slash_command.args.unnamed.arg1 }}" ]]; then
             DISMISSED_REVIEWER=${{ github.event.client_payload.slash_command.args.unnamed.arg1 }}
           fi
-          echo "PULL_REQUEST_IDENTIFIER=${GITHUB_REPOSITORY}/${ISSUE_NUMBER}" >> $GITHUB_ENV
+          echo "PULL_REQUEST_IDENTIFIER=${{ env.GITHUB_REPOSITORY }}/${ISSUE_NUMBER}" >> $GITHUB_ENV
           echo "DISMISSED_REVIEWER=${DISMISSED_REVIEWER}" >> $GITHUB_ENV
       - name: Validate Command Inputs
         run: |
