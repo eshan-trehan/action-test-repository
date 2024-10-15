@@ -33,6 +33,7 @@ jobs:
     steps:
       - name: Export Command Variables
         run: |
+          echo "Github Repository: ${GITHUB_REPOSITORY}"
           REPO_FULL_NAME=${{ github.event.client_payload.github.payload.repository.full_name }}
           ISSUE_NUMBER=${{ github.event.client_payload.github.payload.issue.number }}
 
