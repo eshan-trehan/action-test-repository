@@ -56,7 +56,7 @@ jobs:
           if [ "$RESPONSE_CODE" -eq 200 ]; then
             echo "ERROR=Request to Alfred failed with response code $RESPONSE_CODE" >> $GITHUB_ENV
           else
-            echo "Request to Alfred Successful"
+            echo "Request to Alfred Successful, ${{ env.GITHUB_REPOSITORY }}"
           fi
       - name: Report Error
         uses: peter-evans/create-or-update-comment@v4
