@@ -43,6 +43,7 @@ jobs:
           fi
           echo "PULL_REQUEST_IDENTIFIER=${GITHUB_REPOSITORY}/${ISSUE_NUMBER}" >> $GITHUB_ENV
           echo "DISMISSED_REVIEWER=${DISMISSED_REVIEWER}" >> $GITHUB_ENV
+          echo "ROGERS_GITHUB_ACTION_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
       - name: Validate Command Inputs
         run: |
           if [[ -z "$DISMISSED_REVIEWER" ]]; then
