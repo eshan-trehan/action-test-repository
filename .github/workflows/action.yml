@@ -63,8 +63,8 @@ jobs:
         uses: peter-evans/create-or-update-comment@v4
         if: env.ERROR != ''
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository: env.GITHUB_REPOSITORY
+          token: ${{ env.ROGERS_GITHUB_ACTION_TOKEN }}
+          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |
             > :warning: ${{ env.ERROR }}
@@ -73,7 +73,7 @@ jobs:
         uses: peter-evans/create-or-update-comment@v4
         if: env.ERROR == ''
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository: env.GITHUB_REPOSITORY
+          token: ${{ env.ROGERS_GITHUB_ACTION_TOKEN }}
+          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           reactions: hooray
