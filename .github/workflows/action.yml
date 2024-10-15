@@ -33,8 +33,6 @@ jobs:
     steps:
       - name: Export Command Variables
         run: |
-          echo "Github Repository: ${GITHUB_REPOSITORY}"
-          REPO_FULL_NAME=${{ github.event.client_payload.github.payload.repository.full_name }}
           ISSUE_NUMBER=${{ github.event.client_payload.github.payload.issue.number }}
 
           echo "${{ toJson(github.event.client_payload.slash_command.args) }}"
@@ -43,7 +41,7 @@ jobs:
           elif [[ -n "${{ github.event.client_payload.slash_command.args.unnamed.arg1 }}" ]]; then
             DISMISSED_REVIEWER=${{ github.event.client_payload.slash_command.args.unnamed.arg1 }}
           fi
-          echo "PULL_REQUEST_IDENTIFIER=${REPO_FULL_NAME}/${ISSUE_NUMBER}" >> $GITHUB_ENV
+          echo "PULL_REQUEST_IDENTIFIER=${GITHUB_REPOSITORY}/${ISSUE_NUMBER}" >> $GITHUB_ENV
           echo "DISMISSED_REVIEWER=${DISMISSED_REVIEWER}" >> $GITHUB_ENV
       - name: Validate Command Inputs
         run: |
@@ -56,16 +54,16 @@ jobs:
         run: |
           RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X GET "https://google.com")
           if [ "$RESPONSE_CODE" -eq 200 ]; then
-            echo "Request to Alfred Successful"
-          else
             echo "ERROR=Request to Alfred failed with response code $RESPONSE_CODE" >> $GITHUB_ENV
-           fi
+          else
+            echo "Request to Alfred Successful"
+          fi
       - name: Report Error
         uses: peter-evans/create-or-update-comment@v4
         if: env.ERROR != ''
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
+          repository: ${{ env.GITHUB_REPOSITORY }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           body: |
             > :warning: ${{ env.ERROR }}
@@ -75,6 +73,6 @@ jobs:
         if: env.ERROR == ''
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
+          repository: ${{ env.GITHUB_REPOSITORY }}
           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
           reactions: hooray
