@@ -1,0 +1,100 @@
+name: Slash Command
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  handle-slash-command:
+     # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    defaults:
+
+
+    steps:
+      # Check out the repository's code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up Node.js with the specified version
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+
+      # Install dependencies from package.json
+      - name: Install dependencies
+        working-directory: ./lab/github_slash_command
+        run: npm install
+
+      # Run your JavaScript file
+      - name: Run JavaScript file
+        working-directory: ./lab/github_slash_command
+        run: node main.js
+        env:
+          ISSUE_COMMENT_BODY: "/dismiss -r #stark,#shield"
+      
+  # execute-dismiss-command:
+  #   if: github.event_name == 'repository_dispatch' && github.event.action == 'dismiss-command'
+  #   runs-on: [ sdmain-runner-set ]
+  #   container: ubuntu:22.04
+  #   permissions:
+  #     contents: write
+  #     pull-requests: write
+  #   steps:
+  #     - name: Import Github Action Token
+  #       id: import-secrets
+  #       uses: hashicorp/vault-action@v3.0.0
+  #       with:
+  #         url:  ${{ secrets.VAULT_URL }}
+  #         method: approle
+  #         roleId: ${{ secrets.VAULT_ROLE_ID }}
+  #         secretId: ${{ secrets.VAULT_SECRET_ID }}
+  #         secrets: |
+  #           rubrik-secret/data/dev-platform/github-secrets/rogers ROGERS_GITHUB_ACTION_TOKEN
+  #     - name: Export Command Variables
+  #       run: |
+  #         ISSUE_NUMBER=${{ github.event.client_payload.github.payload.issue.number }}
+  #         echo "${{ toJson(github.event.client_payload.slash_command.args) }}"
+  #         if [[ -n "${{ github.event.client_payload.slash_command.args.named.reviewer }}" ]]; then
+  #           DISMISSED_REVIEWER=${{ github.event.client_payload.slash_command.args.named.reviewer }}
+  #         elif [[ -n "${{ github.event.client_payload.slash_command.args.unnamed.arg1 }}" ]]; then
+  #           DISMISSED_REVIEWER=${{ github.event.client_payload.slash_command.args.unnamed.arg1 }}
+  #         fi
+  #         echo "PULL_REQUEST_IDENTIFIER=${GITHUB_REPOSITORY}/${ISSUE_NUMBER}" >> $GITHUB_ENV
+  #         echo "DISMISSED_REVIEWER=${DISMISSED_REVIEWER}" >> $GITHUB_ENV
+  #     - name: Validate Command Inputs
+  #       run: |
+  #         if [[ -z "$DISMISSED_REVIEWER" ]]; then
+  #           ERROR="No reviewer specified to dismiss!"
+  #         fi
+  #         echo "ERROR=${ERROR}" >> $GITHUB_ENV
+  #     - name: Fetch Alfred URL
+  #       id: fetch-alfred-url
+  #       run: |
+  #         echo "ALFRED_URL=$(curl -s -L https://repository.rubrik.com/artifactory/stark-files-local/alfred/stage/alfred.json | jq -r '.dismiss_reviewer_endpoint')" >> $GITHUB_ENV
+  #     - name: Make Alfred Request to add dismissed Reviewers
+  #       if: env.ERROR == ''
+  #       run: |
+  #         RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X PUT "${ALFRED_URL}" --body "{\"pull_request_id\": \"${PULL_REQUEST_IDENTIFIER}\", \"reviewers\": [\"${DISMISSED_REVIEWER}\"]})
+  #         if [ "$RESPONSE_CODE" -eq 200 ]; then
+  #           echo "Request to Alfred Successful"
+  #         else
+  #           echo "ERROR=Request to Alfred failed with response code $RESPONSE_CODE" >> $GITHUB_ENV
+  #         fi
+  #     - name: Report Error
+  #       uses: peter-evans/create-or-update-comment@v4
+  #       if: env.ERROR != ''
+  #       with:
+  #         token: ${{ env.ROGERS_GITHUB_ACTION_TOKEN }}
+  #         repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
+  #         comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
+  #         body: |
+  #           > :warning: ${{ env.ERROR }}
+  #         reactions: confused
+  #     - name: Report Success
+  #       uses: peter-evans/create-or-update-comment@v4
+  #       if: env.ERROR == ''
+  #       with:
+  #         token: ${{ env.ROGERS_GITHUB_ACTION_TOKEN }}
+  #         repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
+  #         comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
+  #         reactions: hooray
