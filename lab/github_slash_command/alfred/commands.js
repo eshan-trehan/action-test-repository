@@ -1,4 +1,5 @@
 const { Command } = new require("commander")
+const { githubExitHandler } = new require("../common")
 
 function commaSeparatedList(value) {
     return value.split(',');
@@ -15,6 +16,8 @@ const dismiss = new Command("/dismiss")
 
         console.log("Dismissing Reviewers ", options.reviewers)
     })
+
+dismiss.exitOverride(githubExitHandler);
 
 module.exports = {
     dismiss
