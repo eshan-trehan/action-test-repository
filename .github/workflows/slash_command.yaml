@@ -7,10 +7,6 @@ jobs:
   handle-slash-command:
      # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    defaults:
-
-
     steps:
       # Check out the repository's code
       - name: Checkout repository
