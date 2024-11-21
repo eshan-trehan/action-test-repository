@@ -9,22 +9,6 @@ jobs:
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
-      # Check out the repository's code
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      # Set up Node.js with the specified version
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-
-      # Install dependencies from package.json
-      - name: Install dependencies
-        working-directory: ./lab/github_slash_command
-        run: npm install
-
-      - name: Set Default Value
-        run: echo "SHOULD_CONTINUE=true" >> $GITHUB_OUTPUT
-      
       - name: Add reaction to the comment with the slash command
         uses: actions/github-script@v6
         with:
@@ -45,6 +29,26 @@ jobs:
               comment_id: context.payload.comment.id,
               content: 'eyes',
             });
+    
+      # Check out the repository's code
+      - name: Checkout repository
+        if: env.SHOULD_CONTINUE == 'true'
+        uses: actions/checkout@v3
+
+      # Set up Node.js with the specified version
+      - name: Setup Node.js
+        if: env.SHOULD_CONTINUE == 'true'
+        uses: actions/setup-node@v3
+
+      # Install dependencies from package.json
+      - name: Install dependencies
+        if: env.SHOULD_CONTINUE == 'true'
+        working-directory: ./lab/github_slash_command
+        run: npm install
+
+      - name: Set Default Value
+        if: env.SHOULD_CONTINUE == 'true'
+        run: echo "SHOULD_CONTINUE=true" >> $GITHUB_OUTPUT
 
       # Run your JavaScript file
       - name: Run JavaScript file
