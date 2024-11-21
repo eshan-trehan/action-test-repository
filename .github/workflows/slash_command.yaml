@@ -9,6 +9,9 @@ jobs:
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
+      - name: Set Default Value
+        run: echo "SHOULD_CONTINUE=true" >> $GITHUB_OUTPUT
+
       - name: Add reaction to the comment with the slash command
         uses: actions/github-script@v6
         with:
@@ -45,10 +48,6 @@ jobs:
         if: env.SHOULD_CONTINUE == 'true'
         working-directory: ./lab/github_slash_command
         run: npm install
-
-      - name: Set Default Value
-        if: env.SHOULD_CONTINUE == 'true'
-        run: echo "SHOULD_CONTINUE=true" >> $GITHUB_OUTPUT
 
       # Run your JavaScript file
       - name: Run JavaScript file
