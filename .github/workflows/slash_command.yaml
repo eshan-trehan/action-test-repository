@@ -21,9 +21,10 @@ jobs:
         working-directory: ./lab/github_slash_command
         run: npm install
       
-      # Print the comment payload
-      - name: Print comment payload
-        run: echo ${{ github.event.comment }}
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            console.log('Event Payload:', context.payload);
 
       # Run your JavaScript file
       - name: Run JavaScript file
