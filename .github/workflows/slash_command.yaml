@@ -3,6 +3,9 @@ on:
   issue_comment:
     types: [created]
 
+permissions:
+  issues: write
+
 jobs:
   handle-slash-command:
      # The type of runner that the job will run on
