@@ -24,14 +24,18 @@ jobs:
       - name: Install dependencies
         working-directory: ./lab/github_slash_command
         run: npm install
+      
+      # Print the comment payload
+      - name: Print comment payload
+        run: echo ${{ github.event }}
 
       # Run your JavaScript file
       - name: Run JavaScript file
         working-directory: ./lab/github_slash_command
         run: node main.js
         env:
-          ISSUE_COMMENT_BODY: "/dismiss -r #stark,#shield"
-      
+          ISSUE_COMMENT_BODY: ${{ github.event.comment.body }}
+
   # execute-dismiss-command:
   #   if: github.event_name == 'repository_dispatch' && github.event.action == 'dismiss-command'
   #   runs-on: [ sdmain-runner-set ]
