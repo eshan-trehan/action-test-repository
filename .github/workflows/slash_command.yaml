@@ -3,12 +3,10 @@ on:
   issue_comment:
     types: [created]
 
-permissions:
-  issues: write
-
 jobs:
   handle-slash-command:
      # The type of runner that the job will run on
+    permissions: write-all
     runs-on: ubuntu-latest
     steps:
       # Check out the repository's code
