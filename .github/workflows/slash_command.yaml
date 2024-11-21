@@ -28,9 +28,6 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            // Import the core module to access setOutput
-            const core = require('@actions/core');
-
             // Get the comment ID from the event payload
             if (!github.event.comment.body.startsWith('/')) {
               console.log('The comment does not start with a slash. Exiting.');
