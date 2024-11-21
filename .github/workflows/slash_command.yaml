@@ -9,10 +9,12 @@ jobs:
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
+      # Initialize the SHOULD_CONTINUE environment variable
       - name: Initialize SHOULD_CONTINUE
         run: echo "SHOULD_CONTINUE=true" >> $GITHUB_ENV
 
-      - name: Add reaction to the comment with the slash command
+      # Check if the comment starts with a Slash
+      - name: Check if the comment starts with a Slash
         uses: actions/github-script@v6
         with:
           script: |
@@ -52,13 +54,17 @@ jobs:
         working-directory: ./lab/github_slash_command
         run: npm install
 
-      # Run your JavaScript file
+      # Run Slash Command Handler JavaScript file
       - name: Run JavaScript file
         if: env.SHOULD_CONTINUE == 'true'
         working-directory: ./lab/github_slash_command
         run: node main.js
         env:
+          OWNER: ${{ github.event.repository.owner.login }}
+          REPO: ${{ github.event.repository.name }}
+          ISSUE_COMMENT_ID: ${{ github.event.comment.id }}
           ISSUE_COMMENT_BODY: ${{ github.event.comment.body }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   # execute-dismiss-command:
   #   if: github.event_name == 'repository_dispatch' && github.event.action == 'dismiss-command'
