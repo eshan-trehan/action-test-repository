@@ -9,8 +9,8 @@ jobs:
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
-      - name: Set Default Value
-        run: echo "SHOULD_CONTINUE=true" >> $GITHUB_OUTPUT
+      - name: Initialize SHOULD_CONTINUE
+        run: echo "SHOULD_CONTINUE=true" >> $GITHUB_ENV
 
       - name: Add reaction to the comment with the slash command
         uses: actions/github-script@v6
@@ -20,18 +20,21 @@ jobs:
             if (!context.payload.comment.body.startsWith('/')) {
               console.log('The comment does not start with a slash. Exiting.');
               
-              // Set the output variable SHOULD_CONTINUE to false
-              core.setOutput('SHOULD_CONTINUE', 'false');
-            }
+              // Set the environment variable SHOULD_CONTINUE to false
+              const fs = require('fs');
+              fs.appendFileSync(process.env.GITHUB_ENV, 'SHOULD_CONTINUE=false\n');
+            } else {
+              console.log('The comment starts with a slash.');
 
-            // Add a reaction to the issue comment indicating 
-            // that the command was received.
-            await github.rest.reactions.createForIssueComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              comment_id: context.payload.comment.id,
-              content: 'eyes',
-            });
+              // Add a reaction to the issue comment indicating 
+              // that the command was received.
+              await github.rest.reactions.createForIssueComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: context.payload.comment.id,
+                content: 'eyes',
+              });
+            }
     
       # Check out the repository's code
       - name: Checkout repository
