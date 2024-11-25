@@ -50,7 +50,7 @@ if __name__ == "__main__":
             issue_comment_body=issue_comment_body,
         )
         output, exception = process_command(issue_comment_body)
-        log.info("Command output.", output=output, exception=exception)
+        log.info("Command output.", output=output, exception=str(exception))
     except Exception as e:
         exception = e
         output += (
@@ -58,7 +58,7 @@ if __name__ == "__main__":
         )
         log.error(
             "An error occurred while processing the command.",
-            exception=exception,
+            exception=str(exception),
         )
 
     if exception:
