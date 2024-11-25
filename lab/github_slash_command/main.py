@@ -86,3 +86,12 @@ if __name__ == "__main__":
             repo=github_repo,
             owner=github_owner,
         )
+
+        # Append the command output as a footer to the issue comment
+        append_issue_comment_with_footer(
+            comment_id=issue_comment_id,
+            body=issue_comment_body,
+            footer=output,
+            repo=github_repo,
+            owner=github_owner,
+        )
