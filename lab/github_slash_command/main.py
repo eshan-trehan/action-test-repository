@@ -21,7 +21,7 @@ import structlog
 log = structlog.get_logger()
 
 
-def process_command(command_str: str) -> Tuple[str, str]:
+def process_command(command_str: str) -> Tuple[str, Exception]:
     """Process the command string"""
 
     # Split the command string into a list of arguments
@@ -38,7 +38,7 @@ if __name__ == "__main__":
     github_repo = get_repo()
     github_owner = get_owner()
 
-    error = None
+    exception = None
     output = ""
     if issue_comment_body:
         try:
@@ -47,21 +47,24 @@ if __name__ == "__main__":
                 issue_comment_id=issue_comment_id,
                 issue_comment_body=issue_comment_body,
             )
-            output, error = process_command(issue_comment_body)
-            log.info("Command output.", output=output, error=error)
+            output, exception = process_command(issue_comment_body)
+            log.info("Command output.", output=output, exception=exception)
         except Exception as e:
-            output += (
-                f"An error occurred while processing the command: {str(e)}"
-            )
+            exception = e
+            output += f"An error occurred while processing the command: {str(exception)}"
             log.error(
-                "An error occurred while processing the command.", error=str(e)
+                "An error occurred while processing the command.",
+                error=str(exception),
             )
 
     else:
-        error = "Issue comment body not found."
+        exception = Exception("Issue comment body not found.")
+        output += (
+            f"An error occurred while processing the command: {str(exception)}"
+        )
         log.error("Issue comment body not found.")
 
-    if error:
+    if exception:
         # Add reaction to the issue comment about the error
         add_reaction_to_issue_comment(
             comment_id=issue_comment_id,
@@ -70,13 +73,11 @@ if __name__ == "__main__":
             owner=github_owner,
         )
 
-        footer_text = output + f"\nError: {error}"
-
         # Append the error message as a footer to the issue comment
         append_issue_comment_with_footer(
             comment_id=issue_comment_id,
             body=issue_comment_body,
-            footer=footer_text,
+            footer=output,
             repo=github_repo,
             owner=github_owner,
         )
