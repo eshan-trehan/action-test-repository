@@ -40,29 +40,26 @@ if __name__ == "__main__":
 
     exception = None
     output = ""
-    if issue_comment_body:
-        try:
-            log.info(
-                "Handling Slash Command for Issue Comment.",
-                issue_comment_id=issue_comment_id,
-                issue_comment_body=issue_comment_body,
-            )
-            output, exception = process_command(issue_comment_body)
-            log.info("Command output.", output=output, exception=exception)
-        except Exception as e:
-            exception = e
-            output += f"An error occurred while processing the command: {str(exception)}"
-            log.error(
-                "An error occurred while processing the command.",
-                error=str(exception),
-            )
+    try:
+        if not issue_comment_body:
+            raise Exception("Issue comment body not found.")
 
-    else:
-        exception = Exception("Issue comment body not found.")
+        log.info(
+            "Handling Slash Command for Issue Comment.",
+            issue_comment_id=issue_comment_id,
+            issue_comment_body=issue_comment_body,
+        )
+        output, exception = process_command(issue_comment_body)
+        log.info("Command output.", output=output, exception=exception)
+    except Exception as e:
+        exception = e
         output += (
             f"An error occurred while processing the command: {str(exception)}"
         )
-        log.error("Issue comment body not found.")
+        log.error(
+            "An error occurred while processing the command.",
+            exception=exception,
+        )
 
     if exception:
         # Add reaction to the issue comment about the error
